@@ -1,0 +1,7 @@
+{
+	"imports": {
+		"solid-js": "https://esm.sh/solid-js@1.6.9",
+		"solid-js/web": "https://esm.sh/solid-js@1.6.9/web",
+		"solid-js/jsx-runtime": "https://esm.sh/solid-js@1.6.9/jsx-runtime"
+	}
+}

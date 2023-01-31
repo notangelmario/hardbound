@@ -1,0 +1,11 @@
+{
+	"importMap": "./import_map.json",
+	"compilerOptions": {
+		"lib": ["dom", "deno.ns", "deno.window"],
+		"jsx": "react-jsx",
+		"jsxImportSource": "solid-js"
+	},
+	"tasks": {
+		"test": "deno run -A test/main.ts"
+	}
+}
