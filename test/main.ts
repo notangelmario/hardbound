@@ -1,7 +1,6 @@
-import { bundle } from "../src/bundle.ts";
-import { esbuildStop } from "../src/deps.ts";
+import { serve } from "../src/server.ts";
 
-const result = await bundle("http://localhost:3000/_hb/App.tsx", import.meta.url);
-esbuildStop();
-
-console.log(result);
+await serve({
+	port: 3000,
+	importMetaUrl: import.meta.url,
+});
