@@ -4,6 +4,7 @@ import { fromFileUrl, join, OakApplication } from "./deps.ts"
 interface Options {
 	port?: number,
 	importMetaUrl: string,
+	importMapPath?: string,
 }
 
 export async function serve(options: Options) {
@@ -16,6 +17,14 @@ export async function serve(options: Options) {
 	app.use(async (ctx) => {
 		const { request, response } = ctx;
 		const { url } = request;
+
+		if (url.pathname.startsWith("/_hb/import_map.json")) {
+			const importMap = await Deno.readTextFile(new URL(options.importMapPath ?? "/import_map.json", options.importMetaUrl));
+
+			response.body = importMap;
+			response.headers.set("Content-Type", "application/json");
+			return;
+		}
 
 		if (url.pathname.startsWith("/_hb/")) {
 			const path = convertReqUrlToFilePath(url.href, options.importMetaUrl);
@@ -34,10 +43,12 @@ export async function serve(options: Options) {
 				return;
 			}
 
-			const code = await bundle(path);
+			const code = await bundle(path, new URL("/_hb/import_map.json", url.origin));
 			response.body = code;
-		} else {
-			response.body = "Hello world!";
+		}
+
+		if (request.accepts()?.includes("text/html")) {
+			response.body = await Deno.readTextFile(new URL("index.html", options.importMetaUrl));
 		}
 	});
 

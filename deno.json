@@ -6,6 +6,6 @@
 		"jsxImportSource": "solid-js"
 	},
 	"tasks": {
-		"test": "deno run -A test/main.ts"
+		"example": "deno run -A --watch example/main.ts"
 	}
 }

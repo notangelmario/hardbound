@@ -2,6 +2,9 @@ import {
 	esbuildInit, 
 	esbuildBuild, 
 	extname,
+	esbuildDenoPlugin,
+	esbuildSolidPlugin,
+	solidRefreshPlugin,
 } from "./deps.ts";
 
 
@@ -11,7 +14,7 @@ await esbuildInit({});
 // This function gets the URL requested by the browser
 // and returns the bundled code which is mapped one to one
 // with the src folder.
-export async function bundle(path: string) {
+export async function bundle(path: string, importMapURL: URL) {
 	try {
 		const bundle = await esbuildBuild({
 			entryPoints: [path],
@@ -19,13 +22,26 @@ export async function bundle(path: string) {
 			bundle: true,
 			format: "esm",
 			platform: "neutral",
-			jsxFactory: "h",
-			minify: true,
-			minifyIdentifiers: false,
-			minifySyntax: true,
-			minifyWhitespace: true,
+			// minify: true,
+			// minifyIdentifiers: false,
+			// minifySyntax: true,
+			// minifyWhitespace: true,
 			write: false,
-			jsxImportSource: "solid-js",
+			plugins: [
+				esbuildDenoPlugin({
+					importMapURL,
+				}),
+				esbuildSolidPlugin({
+					solid: {
+						generate: "universal",
+						hydratable: false,
+						moduleName: "solid-js/web",
+					},
+					babel: {
+						plugins: [[solidRefreshPlugin, { bundler: "vite" }]]
+					}
+				}),
+			]
 		});
 
 		const { outputFiles } = bundle;
