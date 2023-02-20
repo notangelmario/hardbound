@@ -4,18 +4,14 @@ import {
 	extname,
 	esbuildDenoPlugin,
 	esbuildSolidPlugin,
-	fromFileUrl,
 } from "./deps.ts";
 
 
-// Borrowed from fresh.
-let esbuildInitialized: boolean | Promise<void> = false;
+let esbuildInitialized = false;
 async function ensureEsbuildInitialized() {
   if (esbuildInitialized === false) {
-	esbuildInit({});
+  	await esbuildInit({});
     esbuildInitialized = true;
-  } else if (esbuildInitialized instanceof Promise) {
-    await esbuildInitialized;
   }
 }
 
@@ -34,7 +30,7 @@ export async function bundle(path: string, importMapURL: URL) {
 			outfile: "",
 			bundle: true,
 			format: "esm",
-			platform: "neutral",
+			platform: "browser",
 			target: ["chrome99", "firefox99", "safari14"],
 			absWorkingDir,
 			// minify: true,
@@ -44,6 +40,9 @@ export async function bundle(path: string, importMapURL: URL) {
 			treeShaking: true,
 			write: false,
 			jsx: "transform",
+			// inject: [`${basePathname}/auto-import.js`],
+			jsxImportSource: "solid-js",
+			jsxFactory: "h",
 			plugins: [
 				esbuildDenoPlugin({
 					importMapURL,
@@ -53,7 +52,7 @@ export async function bundle(path: string, importMapURL: URL) {
 						generate: "dom",
 						hydratable: false,
 					}
-				}),
+				})
 			]
 		});
 
