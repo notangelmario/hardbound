@@ -45,6 +45,8 @@ export async function serve(options: Options) {
 
 			const code = await bundle(path, new URL("/_hb/import_map.json", url.origin));
 			response.body = code;
+			response.headers.set("Content-Type", "application/javascript");
+			return;
 		}
 
 		if (request.accepts()?.includes("text/html")) {

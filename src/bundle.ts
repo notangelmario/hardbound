@@ -4,7 +4,6 @@ import {
 	extname,
 	esbuildDenoPlugin,
 	esbuildSolidPlugin,
-	solidRefreshPlugin,
 } from "./deps.ts";
 
 
@@ -22,6 +21,7 @@ export async function bundle(path: string, importMapURL: URL) {
 			bundle: true,
 			format: "esm",
 			platform: "neutral",
+			external: ["solid-js", "solid-js/web"],
 			// minify: true,
 			// minifyIdentifiers: false,
 			// minifySyntax: true,
@@ -33,12 +33,8 @@ export async function bundle(path: string, importMapURL: URL) {
 				}),
 				esbuildSolidPlugin({
 					solid: {
-						generate: "universal",
-						hydratable: false,
-						moduleName: "solid-js/web",
-					},
-					babel: {
-						plugins: [[solidRefreshPlugin, { bundler: "vite" }]]
+						generate: "dom",
+						hydratable: true,
 					}
 				}),
 			]

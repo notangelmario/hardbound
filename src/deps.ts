@@ -15,13 +15,17 @@ export {
   toFileUrl,
 } from "https://deno.land/std@0.175.0/path/mod.ts";
 
+export {
+	renderToStringAsync
+} from "https://esm.sh/solid-js@1.6.9/web?dev"
+
 // esbuild
 // @deno-types="https://deno.land/x/esbuild@v0.15.10/mod.d.ts"
 export {
 	initialize as esbuildInit,
 	build as esbuildBuild,
 	stop as esbuildStop,
-} from "https://deno.land/x/esbuild@v0.15.10/mod.js";
+} from "https://deno.land/x/esbuild@v0.15.3/mod.js";
 
 export {
 	denoPlugin as esbuildDenoPlugin,
@@ -29,8 +33,4 @@ export {
 
 export {
 	solidPlugin as esbuildSolidPlugin,
-} from "https://esm.sh/esbuild-plugin-solid@0.5.0?target=esnext&external=esbuild,solid-js";
-
-export {
-	default as solidRefreshPlugin
-} from "https://esm.sh/solid-refresh@0.4.3/babel?target=esnext&external=solid-js";
+} from "https://esm.sh/esbuild-plugin-solid@0.5.0?external=esbuild";
