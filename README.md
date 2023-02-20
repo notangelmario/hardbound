@@ -11,12 +11,14 @@ Hardbound is a SolidJS framework built for Deno.
 * Uses SolidJS for performance
 * Hot Reloading for better DX
 
-## How to
+## Getting started
 
-For the moment, Hardbound does not have a setup for new projects.
-
-You can however, run the example and try it yourself.
-
+To make a Hardbound project:
 ```
-deno task example
+deno run -A https://deno.land/x/hardbound/init.ts my-project
+```
+
+You can also opt in for TypeScript support by passing `-t` or `--typescript`:
+```
+deno run -A https://deno.land/x/hardbound/init.ts -t my-project
 ```

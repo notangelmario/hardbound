@@ -1,0 +1,8 @@
+{
+	"imports": {
+		"hardbound": "../../mod.ts",
+		"solid-js": "https://esm.sh/solid-js@1.6.9?target=esnext&dev",
+		"solid-js/web": "https://esm.sh/solid-js@1.6.9/web?target=esnext&dev",
+		"solid-js/jsx-runtime": "https://esm.sh/solid-js@1.6.9/jsx-runtime?target=esnext&dev"
+	}
+}

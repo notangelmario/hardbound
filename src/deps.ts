@@ -17,8 +17,8 @@ export {
 } from "https://deno.land/std@0.175.0/path/mod.ts";
 
 export {
-	renderToStringAsync
-} from "https://esm.sh/solid-js@1.6.9/web?dev"
+	parse as parseFlags
+} from "https://deno.land/std@0.175.0/flags/mod.ts";
 
 // esbuild
 // @deno-types="https://deno.land/x/esbuild@v0.15.10/mod.d.ts"
