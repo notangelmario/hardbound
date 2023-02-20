@@ -21,12 +21,12 @@ export {
 } from "https://deno.land/std@0.175.0/flags/mod.ts";
 
 // esbuild
-// @deno-types="https://deno.land/x/esbuild@v0.17.5/mod.d.ts"
+// @deno-types="https://deno.land/x/esbuild@v0.15.10/mod.d.ts"
 export {
 	initialize as esbuildInit,
 	build as esbuildBuild,
 	stop as esbuildStop,
-} from "https://deno.land/x/esbuild@v0.17.5/mod.js";
+} from "https://deno.land/x/esbuild@v0.15.10/mod.js";
 
 export {
 	denoPlugin as esbuildDenoPlugin,

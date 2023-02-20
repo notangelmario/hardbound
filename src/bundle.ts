@@ -7,16 +7,40 @@ import {
 } from "./deps.ts";
 
 
-await esbuildInit({
-	// wasmURL: new URL("./esbuild.wasm", import.meta.url).href,
-	// worker: false
-});
+// Borrowed from fresh.
+let esbuildInitialized: boolean | Promise<void> = false;
+async function ensureEsbuildInitialized() {
+  if (esbuildInitialized === false) {
+    if (Deno.run === undefined) {
+      const wasmURL = new URL("./esbuild.wasm", import.meta.url).href;
+      esbuildInitialized = fetch(wasmURL).then(async (r) => {
+        const resp = new Response(r.body, {
+          headers: { "Content-Type": "application/wasm" },
+        });
+        const wasmModule = await WebAssembly.compileStreaming(resp);
+        await esbuildInit({
+          wasmModule,
+          worker: false,
+        });
+      });
+    } else {
+      esbuildInit({});
+    }
+    await esbuildInitialized;
+    esbuildInitialized = true;
+  } else if (esbuildInitialized instanceof Promise) {
+    await esbuildInitialized;
+  }
+}
+
+
 
 
 // This function gets the URL requested by the browser
 // and returns the bundled code which is mapped one to one
 // with the src folder.
 export async function bundle(path: string, importMapURL: URL) {
+	await ensureEsbuildInitialized();
 	try {
 		const bundle = await esbuildBuild({
 			entryPoints: [path],
