@@ -22,11 +22,18 @@ export {
 
 // esbuild
 // @deno-types="https://deno.land/x/esbuild@v0.15.10/mod.d.ts"
-export {
-	initialize as esbuildInit,
-	build as esbuildBuild,
-	stop as esbuildStop,
-} from "https://deno.land/x/esbuild@v0.15.10/mod.js";
+import * as esbuildWasm from "https://deno.land/x/esbuild@v0.15.10/wasm.js";
+import * as esbuildNative from "https://deno.land/x/esbuild@v0.15.10/mod.js";
+
+const esbuild: typeof esbuildWasm = Deno.run === undefined
+  ? esbuildWasm
+  : esbuildNative;
+
+export const { 
+	initialize: esbuildInit,
+	build: esbuildBuild,
+	stop: esbuildStop,
+} = esbuild;
 
 export {
 	denoPlugin as esbuildDenoPlugin,
