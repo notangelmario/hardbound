@@ -4,6 +4,14 @@ export const watcher = (router: Router, path: string) => {
 	const sockets = new Set<WebSocket>();
 	watchFiles(sockets, path);
 
+	router.get("/_hb_dev/refresh.js", async (ctx) => {
+		const { response } = ctx;
+
+		response.body = await Deno.readTextFile(new URL("refresh.js", import.meta.url));
+		response.headers.set("Content-Type", "application/javascript");
+		return;
+	});
+
 	router.get("/_hb_dev/refresh", (ctx) => {
 		const ws = ctx.upgrade();
 

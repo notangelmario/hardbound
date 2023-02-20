@@ -6,6 +6,7 @@
 		"jsxImportSource": "solid-js"
 	},
 	"tasks": {
-		"example": "deno run -A example/main.ts"
+		"example": "deno run -A example/main.ts",
+		"example:dev": "export DEV=true && deno run -A example/main.ts"
 	}
 }

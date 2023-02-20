@@ -2,6 +2,8 @@ import { bundle } from "./bundle.ts";
 import { fromFileUrl, join, OakApplication, Router } from "./deps.ts"
 import { watcher } from "./watcher.ts";
 
+export const DEV_MODE = Deno.env.get("DEV") === "true";
+
 interface Options {
 	port?: number,
 	importMetaUrl: string,
@@ -11,10 +13,11 @@ interface Options {
 export async function serve(options: Options) {
 	const app = new OakApplication();
 	const router = new Router();
-	watcher(router, options.importMetaUrl);
+	DEV_MODE && watcher(router, options.importMetaUrl);
 
 	app.addEventListener("listen", ({ hostname, port, secure }) => {
 		console.log(`Listening on: ${secure ? "https://" : "http://"}${hostname ?? "localhost"}:${port}`);
+		DEV_MODE && console.log("DEV_MODE is enabled");
 	});
 
 	router.get("/_hb/import_map.json", async (ctx) => {
@@ -24,14 +27,6 @@ export async function serve(options: Options) {
 
 		response.body = importMap;
 		response.headers.set("Content-Type", "application/json");
-		return;
-	});
-
-	router.get("/_hb_dev/refresh.js", async (ctx) => {
-		const { response } = ctx;
-
-		response.body = await Deno.readTextFile(new URL("refresh.js", import.meta.url));
-		response.headers.set("Content-Type", "application/javascript");
 		return;
 	});
 
@@ -67,7 +62,13 @@ export async function serve(options: Options) {
 		await next();
 
 		if (request.accepts()?.includes("text/html")) {
-			response.body = await Deno.readTextFile(new URL("index.html", options.importMetaUrl));
+			let html = await Deno.readTextFile(new URL("index.html", options.importMetaUrl));
+			
+			if (DEV_MODE) {
+				html = html.replace("<!-- hb_dev -->", "<script type=\"module\" src=\"/_hb_dev/refresh.js\"></script>");
+			}
+
+			response.body = html;
 			response.headers.set("Content-Type", "text/html");
 			return;
 		}
