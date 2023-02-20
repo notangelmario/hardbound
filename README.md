@@ -10,3 +10,13 @@ Hardbound is a SolidJS framework built for Deno.
 ## Features:
 * No compilation
 * Uses SolidJS for performance
+
+## How to
+
+For the moment, Hardbound does not have a setup for new projects.
+
+You can however, run the example and try it yourself.
+
+```
+deno task example
+```
