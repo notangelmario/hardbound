@@ -7,7 +7,10 @@ import {
 } from "./deps.ts";
 
 
-await esbuildInit({});
+await esbuildInit({
+	// wasmURL: new URL("./esbuild.wasm", import.meta.url).href,
+	// worker: false
+});
 
 
 // This function gets the URL requested by the browser
@@ -18,10 +21,13 @@ export async function bundle(path: string, importMapURL: URL) {
 		const bundle = await esbuildBuild({
 			entryPoints: [path],
 			outdir: ".",
+			outfile: "",
 			bundle: true,
 			format: "esm",
 			platform: "neutral",
 			external: ["solid-js", "solid-js/web"],
+			target: ["chrome99", "firefox99", "safari14"],
+			absWorkingDir: Deno.cwd(),
 			// minify: true,
 			// minifyIdentifiers: false,
 			// minifySyntax: true,
