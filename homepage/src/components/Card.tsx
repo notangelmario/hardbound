@@ -1,3 +1,5 @@
+/** @jsx h */
+import h from "solid-js/h";
 import { JSX } from "solid-js/jsx-runtime";
 import tw from "../lib/twind.ts";
 

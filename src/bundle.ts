@@ -4,6 +4,7 @@ import {
 	extname,
 	esbuildDenoPlugin,
 	esbuildSolidPlugin,
+fromFileUrl,
 } from "./deps.ts";
 
 
@@ -34,13 +35,14 @@ async function ensureEsbuildInitialized() {
 }
 
 
-
-
 // This function gets the URL requested by the browser
 // and returns the bundled code which is mapped one to one
 // with the src folder.
 export async function bundle(path: string, importMapURL: URL) {
+	const absWorkingDir = Deno.cwd();
+	const basePathname = fromFileUrl(import.meta.url.substring(0, import.meta.url.lastIndexOf("/")));
 	await ensureEsbuildInitialized();
+
 	try {
 		const bundle = await esbuildBuild({
 			entryPoints: [path],
@@ -48,15 +50,19 @@ export async function bundle(path: string, importMapURL: URL) {
 			outfile: "",
 			bundle: true,
 			format: "esm",
-			platform: "neutral",
-			external: ["solid-js", "solid-js/web"],
+			platform: "browser",
 			target: ["chrome99", "firefox99", "safari14"],
-			absWorkingDir: Deno.cwd(),
+			absWorkingDir,
 			// minify: true,
 			// minifyIdentifiers: false,
 			// minifySyntax: true,
 			// minifyWhitespace: true,
+			treeShaking: true,
 			write: false,
+			jsx: "transform",
+			// inject: [`${basePathname}/auto-import.js`],
+			jsxImportSource: "solid-js",
+			jsxFactory: "h",
 			plugins: [
 				esbuildDenoPlugin({
 					importMapURL,
@@ -64,7 +70,7 @@ export async function bundle(path: string, importMapURL: URL) {
 				esbuildSolidPlugin({
 					solid: {
 						generate: "dom",
-						hydratable: true,
+						hydratable: false,
 					}
 				}),
 			]
