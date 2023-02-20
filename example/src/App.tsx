@@ -3,7 +3,7 @@ export default function App() {
 
 	return (
 		<div>
-			<h1>Welcome to the </h1>
+			<h1>Welcome to the Jungle</h1>
 			<p>{variable}</p>
 		</div>
 	);

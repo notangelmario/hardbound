@@ -8,8 +8,9 @@ Hardbound is a SolidJS framework built for Deno.
 * Hardbound doesn't have a development mode yet, so no hot reloading.
 
 ## Features:
-* No compilation
+* No compilation needed
 * Uses SolidJS for performance
+* Hot Reloading for better DX
 
 ## How to
 
