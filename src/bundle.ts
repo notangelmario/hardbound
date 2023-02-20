@@ -4,7 +4,7 @@ import {
 	extname,
 	esbuildDenoPlugin,
 	esbuildSolidPlugin,
-fromFileUrl,
+	fromFileUrl,
 } from "./deps.ts";
 
 
@@ -12,22 +12,7 @@ fromFileUrl,
 let esbuildInitialized: boolean | Promise<void> = false;
 async function ensureEsbuildInitialized() {
   if (esbuildInitialized === false) {
-    if (Deno.run === undefined) {
-      const wasmURL = new URL("./esbuild.wasm", import.meta.url).href;
-      esbuildInitialized = fetch(wasmURL).then(async (r) => {
-        const resp = new Response(r.body, {
-          headers: { "Content-Type": "application/wasm" },
-        });
-        const wasmModule = await WebAssembly.compileStreaming(resp);
-        await esbuildInit({
-          wasmModule,
-          worker: false,
-        });
-      });
-    } else {
-      esbuildInit({});
-    }
-    await esbuildInitialized;
+	esbuildInit({});
     esbuildInitialized = true;
   } else if (esbuildInitialized instanceof Promise) {
     await esbuildInitialized;
@@ -40,7 +25,6 @@ async function ensureEsbuildInitialized() {
 // with the src folder.
 export async function bundle(path: string, importMapURL: URL) {
 	const absWorkingDir = Deno.cwd();
-	const basePathname = fromFileUrl(import.meta.url.substring(0, import.meta.url.lastIndexOf("/")));
 	await ensureEsbuildInitialized();
 
 	try {
@@ -50,7 +34,7 @@ export async function bundle(path: string, importMapURL: URL) {
 			outfile: "",
 			bundle: true,
 			format: "esm",
-			platform: "browser",
+			platform: "neutral",
 			target: ["chrome99", "firefox99", "safari14"],
 			absWorkingDir,
 			// minify: true,
@@ -60,9 +44,6 @@ export async function bundle(path: string, importMapURL: URL) {
 			treeShaking: true,
 			write: false,
 			jsx: "transform",
-			// inject: [`${basePathname}/auto-import.js`],
-			jsxImportSource: "solid-js",
-			jsxFactory: "h",
 			plugins: [
 				esbuildDenoPlugin({
 					importMapURL,
