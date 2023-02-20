@@ -1,8 +1,8 @@
 {
 	"imports": {
-		"solid-js": "https://esm.sh/solid-js@1.6.9?target=esnext",
-		"solid-js/web": "https://esm.sh/solid-js@1.6.9/web?target=esnext",
-		"solid-js/jsx-runtime": "https://esm.sh/solid-js@1.6.9/jsx-runtime?target=esnext",
+		"solid-js": "https://esm.sh/solid-js@1.6.9?target=esnext&dev",
+		"solid-js/web": "https://esm.sh/solid-js@1.6.9/web?target=esnext&dev",
+		"solid-js/jsx-runtime": "https://esm.sh/solid-js@1.6.9/jsx-runtime?target=esnext&dev",
 		"solid-refresh": "https://esm.sh/solid-refresh@0.4.3?target=esnext&external=solid-js"
 	}
 }

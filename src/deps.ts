@@ -15,21 +15,14 @@ export {
   toFileUrl,
 } from "https://deno.land/std@0.175.0/path/mod.ts";
 
-// esbuild
-// @deno-types="https://deno.land/x/esbuild@v0.15.10/mod.d.ts"
+// babel
 export {
-	initialize as esbuildInit,
-	build as esbuildBuild,
-	stop as esbuildStop,
-} from "https://deno.land/x/esbuild@v0.15.10/mod.js";
+	transform as babelTransform,
+} from "https://esm.sh/@babel/standalone@7.20.15";
 
 export {
-	denoPlugin as esbuildDenoPlugin,
-} from "https://deno.land/x/esbuild_deno_loader@0.6.0/mod.ts";
-
-export {
-	solidPlugin as esbuildSolidPlugin,
-} from "https://esm.sh/esbuild-plugin-solid@0.5.0?target=esnext&external=esbuild,solid-js";
+	default as babelPresetSolid
+} from "https://esm.sh/babel-preset-solid@1.6.10";
 
 export {
 	default as solidRefreshPlugin

@@ -43,12 +43,23 @@ export async function serve(options: Options) {
 				return;
 			}
 
-			const code = await bundle(path, new URL("/_hb/import_map.json", url.origin));
+			const filename = path.substring(path.lastIndexOf("/") + 1);
+
+			const code = await bundle(path, filename);
 			response.body = code;
+			response.headers.set("Content-Type", "application/javascript");
+			return;
 		}
 
 		if (request.accepts()?.includes("text/html")) {
-			response.body = await Deno.readTextFile(new URL("index.html", options.importMetaUrl));
+			let htmlPage = await Deno.readTextFile(new URL("index.html", options.importMetaUrl));
+			const importMap = await Deno.readTextFile(new URL(options.importMapPath ?? "/import_map.json", options.importMetaUrl));
+
+			htmlPage = htmlPage.replace("%hardbound.import_map%", importMap);
+
+			response.body = htmlPage;
+			response.headers.set("Content-Type", "text/html");
+			return;
 		}
 	});
 
