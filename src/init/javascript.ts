@@ -31,11 +31,27 @@ export const importMap = `
 	"imports": {
 		"hardbound": "https://deno.land/x/hardbound@${version}/mod.ts",
 		"solid-js": "https://esm.sh/solid-js@1.6.9?target=esnext&dev",
-		"solid-js/web": "https://esm.sh/solid-js@1.6.9/web?target=esnext&dev",
-		"solid-js/jsx-runtime": "https://esm.sh/solid-js@1.6.9/jsx-runtime?target=esnext&dev"
+		"solid-js/": "https://esm.sh/solid-js@1.6.9&target=esnext&dev/",
 	}
 }
 `;
+
+export const denoJson = `
+{
+	"importMap": "./import_map.json",
+	"compilerOptions": {
+		"lib": ["dom", "deno.ns", "deno.window"],
+		"jsx": "react-jsx",
+		"jsxImportSource": "solid-js"
+	},
+	"tasks": {
+		"start": "deno run -A starter/main.js",
+		"dev": "export DEV=true && deno run -A ./main.js"
+	}
+}
+`;
+
+
 
 export const indexJsx = `
 import { render } from "solid-js/web";
@@ -58,6 +74,7 @@ export const bootstrap = (projectPath: string) => {
 	Deno.mkdirSync(`${projectPath}/src`, { recursive: true });
 	
 	Deno.writeTextFileSync(`${projectPath}/main.js`, mainJs);
+	Deno.writeTextFileSync(`${projectPath}/deno.json`, denoJson);
 	Deno.writeTextFileSync(`${projectPath}/index.html`, indexHtml);
 	Deno.writeTextFileSync(`${projectPath}/import_map.json`, importMap);
 	Deno.writeTextFileSync(`${projectPath}/src/index.jsx`, indexJsx);

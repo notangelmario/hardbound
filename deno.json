@@ -2,11 +2,12 @@
 	"importMap": "./import_map.json",
 	"compilerOptions": {
 		"lib": ["dom", "deno.ns", "deno.window"],
-		"jsx": "react-jsx",
-		"jsxImportSource": "solid-js"
+		"jsx": "react",
+		"jsxImportSource": "solid-js",
+		"jsxFactory": "createComponent"
 	},
 	"tasks": {
-		"starter": "deno run -A starter/main.ts",
-		"starter:dev": "export DEV=true && deno run -A starter/main.ts"
+		"homepage": "deno run -A homepage/main.ts",
+		"homepage:dev": "export DEV=true && deno run -A homepage/main.tsx"
 	}
 }
