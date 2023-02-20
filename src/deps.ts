@@ -26,7 +26,7 @@ export {
 	initialize as esbuildInit,
 	build as esbuildBuild,
 	stop as esbuildStop,
-} from "https://deno.land/x/esbuild@v0.17.10/mod.js";
+} from "https://deno.land/x/esbuild@v0.17.5/mod.js";
 
 export {
 	denoPlugin as esbuildDenoPlugin,
