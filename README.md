@@ -5,6 +5,7 @@ Hardbound is a SolidJS framework built for Deno.
 ## Notes:
 * Very unstable, lots of things might change, use at your risk!
 * Hardbound is mostly a client-side framework. There is no server-side rendering (yet?)
+* JSX Automatic Runtime doesn't work for the moment, you will need to `import h from "solid-js/h"` in every file
 
 ## Features:
 * No compilation needed
