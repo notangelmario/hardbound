@@ -1,5 +1,5 @@
 import { defineConfig } from "@twind/core";
-import presetTailwind from "https://esm.sh/@twind/preset-tailwind@1.1.4";
+import presetTailwind from "@twind/preset-tailwind";
 
 export default defineConfig({
 	darkMode: "media",
