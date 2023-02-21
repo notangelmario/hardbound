@@ -21,9 +21,9 @@ export {
 } from "https://deno.land/std@0.175.0/flags/mod.ts";
 
 // esbuild
-// @deno-types="https://deno.land/x/esbuild@v0.17.10/mod.d.ts"
-import * as esbuildWasm from "https://deno.land/x/esbuild@v0.17.10/wasm.js";
-import * as esbuildNative from "https://deno.land/x/esbuild@v0.17.10/mod.js";
+// @deno-types="https://deno.land/x/esbuild@v0.15.10/mod.d.ts"
+import * as esbuildWasm from "https://deno.land/x/esbuild@v0.15.10/wasm.js";
+import * as esbuildNative from "https://deno.land/x/esbuild@v0.15.10/mod.js";
 
 const esbuild: typeof esbuildWasm = Deno.run === undefined
   ? esbuildWasm

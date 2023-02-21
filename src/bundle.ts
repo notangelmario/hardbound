@@ -64,7 +64,6 @@ export async function bundle(path: string, importMapURL: URL) {
 			plugins: [
 				esbuildDenoPlugin({
 					importMapURL,
-					loader: "portable"
 				}),
 				esbuildSolidPlugin({
 					solid: {
