@@ -2,7 +2,7 @@
 	"importMap": "./import_map.json",
 	"compilerOptions": {
 		"lib": ["dom", "deno.ns", "deno.window"],
-		"jsx": "react-jsx",
+		"jsx": "react",
 		"jsxFactory": "h",
 		"jsxImportSource": "solid-js"
 	},

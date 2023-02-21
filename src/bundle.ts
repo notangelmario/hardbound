@@ -62,7 +62,7 @@ export async function bundle(path: string, importMapURL: URL) {
 			splitting: true,
 			write: false,
 			// jsx: "automatic",
-			inject: [`./src/auto-import.js`],
+			// inject: [`./src/auto-import.js`],
 			jsxImportSource: "solid-js",
 			jsxFactory: "h",
 			plugins: [
