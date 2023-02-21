@@ -53,6 +53,8 @@ export const denoJson = `
 `;
 
 export const indexTsx = `
+/** @jsx h */
+import h from "solid-js/h";
 import { render } from "solid-js/web";
 import App from "./App.tsx";
 
@@ -60,6 +62,9 @@ render(() => <App />, document.getElementById("root")!);
 `;
 
 export const appTsx = `
+/** @jsx h */
+import h from "solid-js/h";
+
 export default function App() {
 	return (
 		<div>

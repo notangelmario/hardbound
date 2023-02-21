@@ -1,3 +1,6 @@
+/** @jsx h */
+import h from "solid-js/h";
+
 export default function App() {
 	const variable = "Hello World";
 
