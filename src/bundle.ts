@@ -7,6 +7,10 @@ import {
 } from "./deps.ts";
 
 
+
+// Borrowed from fresh
+// Uses esbuild native on machines that support Deno.run
+// AKA Deno Deploy does not, so it uses the wasm version
 let esbuildInitialized: boolean | Promise<void> = false;
 async function ensureEsbuildInitialized() {
   if (esbuildInitialized === false) {
@@ -57,8 +61,8 @@ export async function bundle(path: string, importMapURL: URL) {
 			treeShaking: true,
 			splitting: true,
 			write: false,
-			jsx: "transform",
-			// inject: [`${basePathname}/auto-import.js`],
+			// jsx: "automatic",
+			// inject: [`./src/auto-import.js`],
 			jsxImportSource: "solid-js",
 			jsxFactory: "h",
 			plugins: [
