@@ -1,6 +1,4 @@
-/** @jsx h */
-import h from "solid-js/h";
-import { JSX } from "solid-js/jsx-runtime";
+import { JSX } from "solid-js";
 import tw from "../lib/twind.ts";
 
 export default function Button({ children, onClick }: { children: JSX.Element, onClick?: () => void }) {

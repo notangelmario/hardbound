@@ -7,7 +7,7 @@ export const DEV_MODE = Deno.env.get("DEV") === "true";
 interface Options {
 	port?: number,
 	importMetaUrl: string,
-	importMapPath?: string,
+	importMapPath?: string
 }
 
 export async function serve(options: Options) {
@@ -53,7 +53,7 @@ export async function serve(options: Options) {
 
 		if (request.accepts()?.includes("text/html")) {
 			let html = await Deno.readTextFile(new URL("index.html", options.importMetaUrl));
-			
+
 			if (DEV_MODE) {
 				html = html.replace("<!-- hb_dev -->", "<script type=\"module\" src=\"/_hb_dev/refresh.js\"></script>");
 			}
@@ -62,6 +62,8 @@ export async function serve(options: Options) {
 			response.headers.set("Content-Type", "text/html");
 			return;
 		}
+
+		console.log(`${request.method} ${request.url} ${response.status}`);
 	});
 
 	app.use(router.routes());

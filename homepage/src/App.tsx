@@ -1,5 +1,3 @@
-/** @jsx h */
-import h from "solid-js/h";
 import Button from "./components/Button.tsx";
 import Card from "./components/Card.tsx";
 import CodeBlock from "./components/CodeBlock.tsx";
@@ -52,14 +50,14 @@ export default function App() {
 					If you don't want TypeScript, you can use the following command:
 				</p>
 				<CodeBlock>
-					deno run -A https://deno.land/x/hardbound@0.0.4/init.ts my-app
+					deno run -A https://deno.land/x/hardbound/init.ts my-app
 				</CodeBlock>
 
 				<p>
 					Otherwise, you can use the following command:
 				</p>
 				<CodeBlock>
-					deno run -A https://deno.land/x/hardbound@0.0.4/init.ts -t my-app
+					deno run -A https://deno.land/x/hardbound/init.ts -t my-app
 				</CodeBlock>
 			</Card>
 
