@@ -20,16 +20,6 @@ export async function serve(options: Options) {
 		DEV_MODE && console.log("DEV_MODE is enabled");
 	});
 
-	router.get("/_hb/import_map.json", async (ctx) => {
-		const { response } = ctx;
-
-		const importMap = await Deno.readTextFile(new URL(options.importMapPath ?? "/import_map.json", options.importMetaUrl));
-
-		response.body = importMap;
-		response.headers.set("Content-Type", "application/json");
-		return;
-	});
-
 	router.get("/_hb/:path*", async (ctx) => {
 		const { request, response } = ctx;
 		const { url } = request;
@@ -50,7 +40,7 @@ export async function serve(options: Options) {
 			return;
 		}
 
-		const code = await bundle(path, new URL("/_hb/import_map.json", url.origin));
+		const code = await bundle(path, new URL(options.importMapPath ?? "/import_map.json", options.importMetaUrl));
 		response.body = code;
 		response.headers.set("Content-Type", "application/javascript");
 		return;

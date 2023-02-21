@@ -8,6 +8,6 @@
 	},
 	"tasks": {
 		"homepage": "deno run -A homepage/main.ts",
-		"homepage:dev": "export DEV=true && deno run -A homepage/main.tsx"
+		"homepage:dev": "export DEV=true && deno run -A homepage/main.ts"
 	}
 }
