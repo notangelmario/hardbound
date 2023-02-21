@@ -1,0 +1,9 @@
+{
+	"imports": {
+		"hardbound": "https://deno.land/x/hardbound@0.0.4/mod.ts",
+		"solid-js": "https://esm.sh/solid-js@1.6.9?target=esnext",
+		"solid-js/": "https://esm.sh/solid-js@1.6.9&target=esnext/",
+		"@twind/core": "https://esm.sh/@twind/core@1.1.3",
+		"@twind/preset-tailwind": "https://esm.sh/@twind/preset-tailwind@1.1.4"
+	}
+}
