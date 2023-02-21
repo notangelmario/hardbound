@@ -7,11 +7,28 @@ import {
 } from "./deps.ts";
 
 
-let esbuildInitialized = false;
+let esbuildInitialized: boolean | Promise<void> = false;
 async function ensureEsbuildInitialized() {
   if (esbuildInitialized === false) {
-  	await esbuildInit({});
+    if (Deno.run === undefined) {
+      const wasmURL = new URL("./esbuild.wasm", import.meta.url).href;
+      esbuildInitialized = fetch(wasmURL).then(async (r) => {
+        const resp = new Response(r.body, {
+          headers: { "Content-Type": "application/wasm" },
+        });
+        const wasmModule = await WebAssembly.compileStreaming(resp);
+        await esbuildInit({
+          wasmModule,
+          worker: false,
+        });
+      });
+    } else {
+      esbuildInit({});
+    }
+    await esbuildInitialized;
     esbuildInitialized = true;
+  } else if (esbuildInitialized instanceof Promise) {
+    await esbuildInitialized;
   }
 }
 
@@ -30,7 +47,7 @@ export async function bundle(path: string, importMapURL: URL) {
 			outfile: "",
 			bundle: true,
 			format: "esm",
-			platform: "browser",
+			platform: "neutral",
 			target: ["chrome99", "firefox99", "safari14"],
 			absWorkingDir,
 			// minify: true,
@@ -38,6 +55,7 @@ export async function bundle(path: string, importMapURL: URL) {
 			// minifySyntax: true,
 			// minifyWhitespace: true,
 			treeShaking: true,
+			splitting: true,
 			write: false,
 			jsx: "transform",
 			// inject: [`${basePathname}/auto-import.js`],
@@ -51,7 +69,7 @@ export async function bundle(path: string, importMapURL: URL) {
 					solid: {
 						generate: "dom",
 						hydratable: false,
-					}
+					},
 				})
 			]
 		});
