@@ -1,7 +1,7 @@
 // oak
 export { 
 	Application as OakApplication,
-	Router
+	Router,
 } from "https://deno.land/x/oak@v11.1.0/mod.ts";
 
 // std

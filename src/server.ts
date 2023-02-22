@@ -20,6 +20,26 @@ export async function serve(options: Options) {
 		DEV_MODE && console.log("DEV_MODE is enabled");
 	});
 
+	// Handle all requests to index.html
+	app.use(async (ctx, next) => {
+		const { request, response } = ctx;
+
+		if (request.accepts()?.includes("text/html") && !request.url.pathname.startsWith("/_")) {
+			let html = await Deno.readTextFile(new URL("index.html", options.importMetaUrl));
+
+			if (DEV_MODE) {
+				html = html.replace("<!-- hb_dev -->", "<script type=\"module\" src=\"/_hb_dev/refresh.js\"></script>");
+			}
+
+			response.body = html;
+			response.headers.set("Content-Type", "text/html");
+			return;
+		}
+
+		await next();
+	});
+
+	// Bundle and serve all requests to /_hb
 	router.get("/_hb/:path*", async (ctx) => {
 		const { request, response } = ctx;
 		const { url } = request;
@@ -46,25 +66,32 @@ export async function serve(options: Options) {
 		return;
 	});
 
-	app.use(async (ctx, next) => {
+	// Serve all files in /public
+	router.get("/_public/:path*", async (ctx) => {
 		const { request, response } = ctx;
+		const href = request.url.href.replace("/_public/", "/public/");
+		const path = convertReqUrlToFilePath(href, options.importMetaUrl);
 
-		await next();
-
-		if (request.accepts()?.includes("text/html")) {
-			let html = await Deno.readTextFile(new URL("index.html", options.importMetaUrl));
-
-			if (DEV_MODE) {
-				html = html.replace("<!-- hb_dev -->", "<script type=\"module\" src=\"/_hb_dev/refresh.js\"></script>");
-			}
-
-			response.body = html;
-			response.headers.set("Content-Type", "text/html");
+		if (!path) {
+			response.status = 404;
+			response.body = "File not found";
 			return;
 		}
 
-		console.log(`${request.method} ${request.url} ${response.status}`);
+		try {
+			await Deno.stat(path);
+		} catch {
+			response.status = 404;
+			response.body = "File not found";
+			return;
+		}
+
+		await ctx.send({ 
+			root: new URL("public", options.importMetaUrl).pathname,
+			path: request.url.pathname.replace("/_public/", "/")
+		});
 	});
+
 
 	app.use(router.routes());
 	app.use(router.allowedMethods());

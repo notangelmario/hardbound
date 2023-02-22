@@ -7,7 +7,6 @@ import {
 } from "./deps.ts";
 
 
-
 // Borrowed from fresh
 // Uses esbuild native on machines that support Deno.run
 // AKA Deno Deploy does not, so it uses the wasm version
@@ -54,12 +53,13 @@ export async function bundle(path: string, importMapURL: URL) {
 			platform: "neutral",
 			target: ["chrome99", "firefox99", "safari14"],
 			absWorkingDir,
-			// minify: true,
-			// minifyIdentifiers: false,
-			// minifySyntax: true,
-			// minifyWhitespace: true,
+			minify: true,
+			minifyIdentifiers: true,
+			minifySyntax: true,
+			minifyWhitespace: true,
 			treeShaking: true,
 			splitting: true,
+			chunkNames: "chunk-[name]-[hash]",
 			write: false,
 			// jsx: "automatic",
 			// inject: [`./src/auto-import.js`],
@@ -82,7 +82,6 @@ export async function bundle(path: string, importMapURL: URL) {
 
 		// This is the file that was requested by the browser
 		// and it's the one we want to return.
-		
 		const file = outputFiles.find((file) => {
 			const ext = extname(file.path);
 			return ext === ".js" || ext === ".jsx" || ext === ".ts" || ext === ".tsx";
