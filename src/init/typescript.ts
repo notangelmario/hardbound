@@ -31,7 +31,7 @@ export const importMap = `
 	"imports": {
 		"hardbound": "https://deno.land/x/hardbound@${version}/mod.ts",
 		"solid-js": "https://esm.sh/solid-js@1.6.9?target=esnext&dev",
-		"solid-js/": "https://esm.sh/solid-js@1.6.9&target=esnext&dev/",
+		"solid-js/": "https://esm.sh/solid-js@1.6.9&target=esnext&dev/"
 	}
 }
 `;

@@ -21,7 +21,7 @@ export const indexHtml = `
 	<body>
 		<div id="root"></div>
 		<!-- hb_dev -->
-		<script src="/_hb/index.tsx" type="module"></script>
+		<script src="/_hb/index.jsx" type="module"></script>
 	</body>
 </html>
 `;
@@ -31,7 +31,7 @@ export const importMap = `
 	"imports": {
 		"hardbound": "https://deno.land/x/hardbound@${version}/mod.ts",
 		"solid-js": "https://esm.sh/solid-js@1.6.9?target=esnext&dev",
-		"solid-js/": "https://esm.sh/solid-js@1.6.9&target=esnext&dev/",
+		"solid-js/": "https://esm.sh/solid-js@1.6.9&target=esnext&dev/"
 	}
 }
 `;
@@ -57,9 +57,9 @@ export const indexJsx = `
 /** @jsx h */
 import h from "solid-js/h";
 import { render } from "solid-js/web";
-import App from "./App.tsx";
+import App from "./App.jsx";
 
-render(() => <App />, document.getElementById("root")!);
+render(() => <App />, document.getElementById("root"));
 `;
 
 export const appJsx = `
