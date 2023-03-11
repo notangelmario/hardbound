@@ -1,17 +1,14 @@
 import { version } from "./common.ts";
 
-export const mainJs = `
-import { serve } from "hardbound";
+export const mainJs = `import { serve } from "hardbound";
 
 await serve({
 	port: 3000,
 	importMetaUrl: import.meta.url,
 	importMapPath: "./import_map.json",
-});
-`;
+});`;
 
-export const indexHtml = `
-<!DOCTYPE html>
+export const indexHtml = `<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="utf-8">
@@ -23,21 +20,17 @@ export const indexHtml = `
 		<!-- hb_dev -->
 		<script src="/_hb/index.jsx" type="module"></script>
 	</body>
-</html>
-`;
+</html>`;
 
-export const importMap = `
-{
+export const importMap = `{
 	"imports": {
 		"hardbound": "https://deno.land/x/hardbound@${version}/mod.ts",
 		"solid-js": "https://esm.sh/solid-js@1.6.9?target=esnext&dev",
 		"solid-js/": "https://esm.sh/solid-js@1.6.9&target=esnext&dev/"
 	}
-}
-`;
+}`;
 
-export const denoJson = `
-{
+export const denoJson = `{
 	"importMap": "./import_map.json",
 	"compilerOptions": {
 		"lib": ["dom", "deno.ns", "deno.window"],
@@ -48,32 +41,22 @@ export const denoJson = `
 		"start": "deno run -A starter/main.js",
 		"dev": "export DEV=true && deno run -A ./main.js"
 	}
-}
-`;
+}`;
 
 
 
-export const indexJsx = `
-/** @jsx h */
-import h from "solid-js/h";
-import { render } from "solid-js/web";
+export const indexJsx = `import { render } from "solid-js/web";
 import App from "./App.jsx";
 
-render(() => <App />, document.getElementById("root"));
-`;
+render(() => <App />, document.getElementById("root"));`;
 
-export const appJsx = `
-/** @jsx h */
-import h from "solid-js/h";
-
-export default function App() {
+export const appJsx = `export default function App() {
 	return (
 		<div>
 			<h1>Hello, world!</h1>
 		</div>
 	);
-}
-`;
+}`;
 
 export const bootstrap = (projectPath: string) => {
 	Deno.mkdirSync(`${projectPath}/src`, { recursive: true });
