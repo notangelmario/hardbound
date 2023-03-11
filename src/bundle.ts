@@ -61,10 +61,10 @@ export async function bundle(path: string, importMapURL: URL) {
 			splitting: true,
 			chunkNames: "chunk-[name]-[hash]",
 			write: false,
-			jsx: "transform",
+			// jsx: "transform",
 			// inject: [`./src/auto-import.js`],
-			jsxImportSource: "solid-js",
-			jsxFactory: "h",
+			// jsxImportSource: "solid-js",
+			// jsxFactory: "h",
 			plugins: [
 				esbuildDenoPlugin({
 					importMapURL,
