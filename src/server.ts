@@ -45,6 +45,8 @@ export async function serve(options: Options) {
 
 			if (DEV_MODE) {
 				html = html.replace("<!-- hb_dev -->", "<script type=\"module\" src=\"/_hb_dev/refresh.js\"></script>");
+			} else {
+				html = html.replace("<!-- hb_dev -->", "");
 			}
 
 			html = html.replace("DEPLOY_ID", DEPLOY_ID);
