@@ -3,6 +3,7 @@ import { fromFileUrl, join, OakApplication, Router } from "./deps.ts"
 import { watcher } from "./watcher.ts";
 
 export const DEV_MODE = Deno.env.get("DEV") === "true";
+const DEPLOY_ID = Deno.env.get("DENO_DEPLOYMENT_ID") ?? Math.random().toString(36).substring(7);
 
 interface Options {
 	port?: number,
@@ -20,6 +21,21 @@ export async function serve(options: Options) {
 		DEV_MODE && console.log("DEV_MODE is enabled");
 	});
 
+	app.use(async (ctx, next) => {
+		// Add cache control headers here
+		// Cache for 1 year
+		await next();
+
+		const { request, response } = ctx;
+
+		// Don't cache if in dev mode
+		if (DEV_MODE) return; 
+
+		if (request.url.pathname.startsWith("/_hb")) {
+			response.headers.set("Cache-Control", "public, max-age=31536000");
+		}
+	});
+
 	// Handle all requests to index.html
 	app.use(async (ctx, next) => {
 		const { request, response } = ctx;
@@ -30,6 +46,8 @@ export async function serve(options: Options) {
 			if (DEV_MODE) {
 				html = html.replace("<!-- hb_dev -->", "<script type=\"module\" src=\"/_hb_dev/refresh.js\"></script>");
 			}
+
+			html = html.replace("DEPLOY_ID", DEPLOY_ID);
 
 			response.body = html;
 			response.headers.set("Content-Type", "text/html");
