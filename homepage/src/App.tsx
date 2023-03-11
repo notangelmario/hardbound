@@ -1,5 +1,3 @@
-/** @jsx h */
-import h from "solid-js/h";
 import Button from "./components/Button.tsx";
 import Card from "./components/Card.tsx";
 import CodeBlock from "./components/CodeBlock.tsx";

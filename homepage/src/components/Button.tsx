@@ -1,5 +1,3 @@
-/** @jsx h */
-import h from "solid-js/h";
 import { JSX } from "solid-js";
 import tw from "../lib/twind.ts";
 
