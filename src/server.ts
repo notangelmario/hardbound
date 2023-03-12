@@ -13,6 +13,7 @@ interface Options {
 
 export async function serve(options: Options) {
 	const app = new OakApplication();
+	const cache = new Map<string, string>();
 	const router = new Router();
 	DEV_MODE && watcher(router, options.importMetaUrl);
 
@@ -72,6 +73,12 @@ export async function serve(options: Options) {
 			return;
 		}
 
+		if (!DEV_MODE && cache.has(url.pathname)) {
+			response.body = cache.get(url.pathname);
+			response.headers.set("Content-Type", "application/javascript");
+			return;
+		}
+
 		try {
 			await Deno.stat(path);
 		} catch {
@@ -83,6 +90,9 @@ export async function serve(options: Options) {
 		const code = await bundle(path, new URL(options.importMapPath ?? "/import_map.json", options.importMetaUrl));
 		response.body = code;
 		response.headers.set("Content-Type", "application/javascript");
+		if (!DEV_MODE)
+			cache.set(url.pathname, code);
+
 		return;
 	});
 
