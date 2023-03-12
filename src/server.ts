@@ -66,7 +66,8 @@ export async function serve(options: Options) {
 		const { request, response } = ctx;
 		const { url } = request;
 
-		const key = bundler.getKey(url.pathname);
+		const path = url.pathname.split("/_hb/").pop() ?? "";
+		const key = bundler.getKey(path);
 
 		const code = await bundler.get(key);
 		response.body = code;

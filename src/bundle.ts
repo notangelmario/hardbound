@@ -57,7 +57,7 @@ export class Bundler {
 		const entryPoints: Record<string, string> = {};
 
 		for await (const entry of walk(pathToWalk, { exts: [".js", ".jsx", ".ts", ".tsx"] })) {
-			const path = entry.path.replace("/src/", "/_hb/");
+			const path = entry.path.split("/src/").pop() ?? "";
 			const key = this.getKey(path);
 
 			entryPoints[key] = entry.path;
@@ -128,7 +128,8 @@ export class Bundler {
 			const { outputFiles } = bundle;
 			const cache = new Map<string, Uint8Array>()
 			for (const file of outputFiles) {
-				const key = this.getKey(file.path);
+				const path = file.path.split("/_hb/").pop() ?? "";
+				const key = this.getKey(path);
 				cache.set(key, file.contents);
 			}
 			this.cache = cache;
@@ -143,9 +144,7 @@ export class Bundler {
 		// by removing the _hb folder and everything before it
 		// remove the file extension which can be js, jsx, ts, or tsx
 		// and turning slashes into dashes
-		const key = path.split("_hb/")[1];
-
-		return key.replace(/\.(js|jsx|ts|tsx)$/, "")
+		return path.replace(/\.(js|jsx|ts|tsx)$/, "")
 			.replace(/\//g, "-");
 	}
 }
