@@ -1,10 +1,11 @@
 import { 
 	esbuildInit, 
 	esbuildBuild, 
-	extname,
+	walk,
 	esbuildDenoPlugin,
 	esbuildSolidPlugin,
 } from "./deps.ts";
+import { DEV_MODE } from "./server.ts";
 
 
 // Borrowed from fresh
@@ -39,56 +40,110 @@ async function ensureEsbuildInitialized() {
 // This function gets the URL requested by the browser
 // and returns the bundled code which is mapped one to one
 // with the src folder.
-export async function bundle(path: string, importMapURL: URL) {
-	const absWorkingDir = Deno.cwd();
-	await ensureEsbuildInitialized();
 
-	try {
-		const bundle = await esbuildBuild({
-			entryPoints: [path],
-			outdir: ".",
-			outfile: "",
-			bundle: true,
-			format: "esm",
-			platform: "neutral",
-			target: ["chrome99", "firefox99", "safari14"],
-			absWorkingDir,
-			minify: true,
-			minifyIdentifiers: true,
-			minifySyntax: true,
-			minifyWhitespace: true,
-			treeShaking: true,
-			splitting: true,
-			chunkNames: "chunk-[name]-[hash]",
-			write: false,
-			jsx: "transform",
-			inject: [`./src/auto-import.js`],
-			jsxImportSource: "solid-js",
-			jsxFactory: "h",
-			plugins: [
-				esbuildDenoPlugin({
-					importMapURL,
-				}),
-				esbuildSolidPlugin({
-					solid: {
-						generate: "dom",
-						hydratable: false,
-					},
-				})
-			]
-		});
+export class Bundler {
+	private cache: Map<string, Uint8Array> = new Map();
+	private importMapPath: URL;
+	private importMetaURL: string;
+	private entryPoints: Record<string, string> = {};
 
-		const { outputFiles } = bundle;
+	constructor(importMapPath: string, importMetaURL: string) {
+		this.importMapPath = new URL(importMapPath);
+		this.importMetaURL = importMetaURL;
+	}
 
-		// This is the file that was requested by the browser
-		// and it's the one we want to return.
-		const file = outputFiles.find((file) => {
-			const ext = extname(file.path);
-			return ext === ".js" || ext === ".jsx" || ext === ".ts" || ext === ".tsx";
-		});
+	public async getEntryPoints() {
+		const pathToWalk = new URL("src", this.importMetaURL).pathname;
+		const entryPoints: Record<string, string> = {};
 
-		return file?.text;
-	} catch {
-		return "There was an error bundling the file.";
+		for await (const entry of walk(pathToWalk, { exts: [".js", ".jsx", ".ts", ".tsx"] })) {
+			const path = entry.path.replace("/src/", "/_hb/");
+			const key = this.getKey(path);
+
+			entryPoints[key] = entry.path;
+		}
+
+		this.entryPoints = entryPoints;
+	}
+
+	public async get(path: string) {
+		if (Object.keys(this.entryPoints).length === 0) {
+			await this.getEntryPoints();
+		}
+
+		if (this.cache.has(path)) {
+			return this.cache.get(path);
+		}
+
+		await this.bundle();
+		if (!this.cache.has(path)) {
+			return this.cache.get(path);
+		}
+
+		return this.cache.get(path);
+	}
+
+
+	private async bundle() {
+		const absWorkingDir = Deno.cwd();
+		await ensureEsbuildInitialized();
+
+		try {
+			const bundle = await esbuildBuild({
+				entryPoints: this.entryPoints,
+				outdir: "_hb",
+				outfile: "",
+				bundle: true,
+				format: "esm",
+				platform: "neutral",
+				target: ["chrome99", "firefox99", "safari14"],
+				absWorkingDir,
+				minify: !DEV_MODE,
+				minifyIdentifiers: !DEV_MODE,
+				minifySyntax: !DEV_MODE,
+				minifyWhitespace: !DEV_MODE,
+				treeShaking: true,
+				splitting: true,
+				chunkNames: "chunk-[hash]",
+				write: false,
+				jsx: "transform",
+				inject: [`./src/auto-import.js`],
+				jsxImportSource: "solid-js",
+				jsxFactory: "h",
+				plugins: [
+					esbuildDenoPlugin({
+						importMapURL: this.importMapPath,
+					}),
+					esbuildSolidPlugin({
+						solid: {
+							generate: "dom",
+							hydratable: false,
+						},
+					})
+				]
+			});
+
+			const { outputFiles } = bundle;
+			const cache = new Map<string, Uint8Array>()
+			for (const file of outputFiles) {
+				const key = this.getKey(file.path);
+				cache.set(key, file.contents);
+			}
+			this.cache = cache;
+
+		} catch {
+			return "There was an error bundling the file.";
+		}
+	}
+
+	public getKey(path: string) {
+		// Create key from path
+		// by removing the _hb folder and everything before it
+		// remove the file extension which can be js, jsx, ts, or tsx
+		// and turning slashes into dashes
+		const key = path.split("_hb/")[1];
+
+		return key.replace(/\.(js|jsx|ts|tsx)$/, "")
+			.replace(/\//g, "-");
 	}
 }

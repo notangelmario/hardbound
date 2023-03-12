@@ -17,7 +17,8 @@ export {
 } from "https://deno.land/std@0.175.0/path/mod.ts";
 
 export {
-	copy
+	copy,
+	walk
 } from "https://deno.land/std@0.175.0/fs/mod.ts";
 
 export {

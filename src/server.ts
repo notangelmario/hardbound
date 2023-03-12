@@ -1,4 +1,4 @@
-import { bundle } from "./bundle.ts";
+import { Bundler } from "./bundle.ts";
 import { fromFileUrl, join, OakApplication, Router } from "./deps.ts"
 import { watcher } from "./watcher.ts";
 
@@ -14,8 +14,8 @@ export interface Options {
 
 export async function serve(options: Options) {
 	const app = new OakApplication();
-	const cache = new Map<string, string>();
 	const router = new Router();
+	const bundler = new Bundler(new URL(options.importMapPath ?? "import_map.json", options.importMetaUrl).href, options.importMetaUrl);
 	DEV_MODE && watcher(router, options.importMetaUrl);
 
 	app.addEventListener("listen", ({ hostname, port, secure }) => {
@@ -66,33 +66,11 @@ export async function serve(options: Options) {
 		const { request, response } = ctx;
 		const { url } = request;
 
-		const path = convertReqUrlToFilePath(url.href, options.importMetaUrl);
+		const key = bundler.getKey(url.pathname);
 
-		if (!path) {
-			response.status = 404;
-			response.body = "File not found";
-			return;
-		}
-
-		if (!DEV_MODE && cache.has(url.pathname)) {
-			response.body = cache.get(url.pathname);
-			response.headers.set("Content-Type", "application/javascript");
-			return;
-		}
-
-		try {
-			await Deno.stat(path);
-		} catch {
-			response.status = 404;
-			response.body = "File not found";
-			return;
-		}
-
-		const code = await bundle(path, new URL(options.importMapPath ?? "/import_map.json", options.importMetaUrl));
+		const code = await bundler.get(key);
 		response.body = code;
 		response.headers.set("Content-Type", "application/javascript");
-		if (!DEV_MODE)
-			cache.set(url.pathname, code);
 
 		return;
 	});
