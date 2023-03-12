@@ -64,6 +64,8 @@ export class Bundler {
 		}
 
 		this.entryPoints = entryPoints;
+
+		console.log(this.entryPoints);
 	}
 
 	public async get(path: string) {
