@@ -17,6 +17,10 @@ export {
 } from "https://deno.land/std@0.175.0/path/mod.ts";
 
 export {
+	copy
+} from "https://deno.land/std@0.175.0/fs/mod.ts";
+
+export {
 	parse as parseFlags
 } from "https://deno.land/std@0.175.0/flags/mod.ts";
 

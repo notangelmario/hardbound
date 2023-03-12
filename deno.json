@@ -7,6 +7,7 @@
 	},
 	"tasks": {
 		"homepage": "deno run -A homepage/main.ts",
+		"homepage:build": "deno run -A homepage/build.ts",
 		"homepage:dev": "export DEV=true && deno run -A homepage/main.ts"
 	}
 }

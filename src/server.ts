@@ -3,12 +3,13 @@ import { fromFileUrl, join, OakApplication, Router } from "./deps.ts"
 import { watcher } from "./watcher.ts";
 
 export const DEV_MODE = Deno.env.get("DEV") === "true";
-const DEPLOY_ID = Deno.env.get("DENO_DEPLOYMENT_ID") ?? Math.random().toString(36).substring(7);
+export const DEPLOY_ID = Deno.env.get("DENO_DEPLOYMENT_ID") ?? Math.random().toString(36).substring(7);
 
-interface Options {
+export interface Options {
 	port?: number,
 	importMetaUrl: string,
-	importMapPath?: string
+	importMapPath?: string,
+	outputDir?: string,
 }
 
 export async function serve(options: Options) {
@@ -129,7 +130,7 @@ export async function serve(options: Options) {
 	await app.listen({ port: options.port ?? 3000 });
 }
 
-const convertReqUrlToFilePath = (reqUrl: string, importMetaUrl: string): string | null => {
+export const convertReqUrlToFilePath = (reqUrl: string, importMetaUrl: string): string | null => {
 	try {
 		const basePathname = fromFileUrl(importMetaUrl.substring(0, importMetaUrl.lastIndexOf("/")));
 		const urlPath = new URL(reqUrl.replace("/_hb/", "/src/")).pathname;
