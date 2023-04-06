@@ -107,7 +107,7 @@ export class Bundler {
 				chunkNames: "chunk-[hash]",
 				write: false,
 				jsx: "transform",
-				inject: [`./src/auto-import.js`],
+				inject: [`https://raw.githubusercontent.com/notangelmario/hardbound/main/src/auto-import.js`],
 				jsxImportSource: "solid-js",
 				jsxFactory: "h",
 				plugins: [

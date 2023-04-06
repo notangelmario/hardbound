@@ -1,5 +1,5 @@
 import { Bundler } from "./bundle.ts";
-import { fromFileUrl, join, OakApplication, Router } from "./deps.ts"
+import { fromFileUrl, join, OakApplication, renderToString, Router } from "./deps.ts"
 import { watcher } from "./watcher.ts";
 
 export const DEV_MODE = Deno.env.get("DEV") === "true";
@@ -52,6 +52,14 @@ export async function serve(options: Options) {
 			}
 
 			html = html.replace("DEPLOY_ID", DEPLOY_ID);
+
+			
+			const { default: App } = await import("http://localhost:3000/_hb/App.js");
+
+			console.log(App);
+
+			//@ts-ignore: because i said so
+			console.log(renderToString(App));
 
 			response.body = html;
 			response.headers.set("Content-Type", "text/html");

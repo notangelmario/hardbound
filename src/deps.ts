@@ -25,6 +25,9 @@ export {
 	parse as parseFlags
 } from "https://deno.land/std@0.175.0/flags/mod.ts";
 
+export {
+	renderToString
+} from "https://esm.sh/v111/solid-js@1.6.14/web";
 // esbuild
 // @deno-types="https://deno.land/x/esbuild@v0.17.3/mod.d.ts"
 import * as esbuildWasm from "https://deno.land/x/esbuild@v0.17.3/wasm.js";
